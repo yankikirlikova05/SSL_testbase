@@ -6,6 +6,7 @@ import numpy as np
 import sounddevice as sd
 
 from urban_noise_selector import get_urban_noise
+from csv_logger import log_event
 
 DEVICE_ID = 4
 N_CHANNELS_OUT = 16
@@ -55,14 +56,17 @@ def main():
     seq_len = len(PLAY_ORDER) * step
     out = np.zeros((seq_len, N_CHANNELS_OUT))
 
-    noise = tile_to(get_urban_noise(amplitude=NOISE_GAIN), seq_len)
+    noise_clip, noise_file = get_urban_noise(amplitude=NOISE_GAIN)
+    noise = tile_to(noise_clip, seq_len)
     for spk in NOISE_SPEAKERS:
         out[:, speaker_to_channel[spk]] = noise
+    log_event(__file__, NOISE_SPEAKERS, noise_file, round(seq_len / fs, 1), notes="background noise")
 
     for i, spk in enumerate(PLAY_ORDER):
         s = i * step
         ch = speaker_to_channel[spk]
         out[s:s + len(tone), ch] = tone
+        log_event(__file__, spk, f"{FREQ}Hz_tone", TONE_DURATION)
         print(f"Tone {FREQ} Hz -> speaker {spk} (ch {ch}) at t={START_DELAY + s / fs:.1f}s")
 
     time.sleep(START_DELAY)

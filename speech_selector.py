@@ -1,5 +1,5 @@
-# Pick a random file from speech/, crop a random fixed-duration segment, return it.
-# Helper only — imported by the play scripts, does not play anything itself.
+# Pick a random file from speech/, crop a random fixed-duration segment.
+# Returns (clip, filename). Helper only — imported by the play scripts.
 
 import glob
 import os
@@ -46,6 +46,6 @@ def get_speech(duration=CLIP_DURATION, amplitude=AMPLITUDE):
     if peak > 0:
         clip = clip / peak * amplitude
 
-    print(f"Speech: {os.path.basename(path)} "
-          f"crop {duration:.0f}s at t={start / fs:.1f}s")
-    return clip
+    name = os.path.basename(path)
+    print(f"Speech: {name} crop {duration:.0f}s at t={start / fs:.1f}s")
+    return clip, name

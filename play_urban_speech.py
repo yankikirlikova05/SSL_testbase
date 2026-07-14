@@ -1,12 +1,7 @@
 # Play urban noise from speakers 9,10,11,12 and speech1.wav from speaker 1
 
-#find speech recording , timit, libery speech 
+#      find speech recording , timit, libery speech 
 
-
-# label the recordings with timestapms and play sounds from random speakres when multiple sources. 
-# could do it randomly for single source as well . 
-
-# speech without noise 
 import glob
 import os
 from math import gcd
@@ -15,6 +10,8 @@ import numpy as np
 import sounddevice as sd
 import soundfile as sf
 from scipy.signal import resample_poly
+
+from csv_logger import log_event
 
 DEVICE_ID = 4
 N_CHANNELS_OUT = 16
@@ -78,15 +75,20 @@ def main():
     out = np.zeros((total_n, N_CHANNELS_OUT))
 
     urban_files = sorted(glob.glob(os.path.join(URBAN_DIR, "*.mp3")))
+    used_speakers, used_files = [], []
     for spk, f in zip(NOISE_SPEAKERS, urban_files):
         ch = speaker_to_channel[spk]
         out[:, ch] = load_source(f, total_n)
+        used_speakers.append(spk)
+        used_files.append(os.path.basename(f))
         print(f"Noise  speaker {spk} (ch {ch}): {os.path.basename(f)}")
+    log_event(__file__, used_speakers, used_files, round(TOTAL_DURATION, 1), notes="background noise")
 
     speech = load_source(SPEECH_FILE, int(SPEECH_DURATION * fs))
     start = int(SPEECH_DELAY * fs)
     ch = speaker_to_channel[SPEECH_SPEAKER]
     out[start:start + len(speech), ch] = speech
+    log_event(__file__, SPEECH_SPEAKER, SPEECH_FILE, SPEECH_DURATION)
     print(f"Speech speaker {SPEECH_SPEAKER} (ch {ch}): {SPEECH_FILE} "
           f"at t={SPEECH_DELAY:.0f}s for {SPEECH_DURATION:.0f}s")
 

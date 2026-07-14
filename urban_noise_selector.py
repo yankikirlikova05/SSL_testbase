@@ -1,4 +1,5 @@
-# Pick a random file from urban/, crop a random fixed-duration segment, return/save it.
+# Pick a random file from urban/, crop a random fixed-duration segment.
+# Returns (clip, filename). Helper only.
 
 import glob
 import os
@@ -45,6 +46,6 @@ def get_urban_noise(duration=CROP_DURATION, amplitude=AMPLITUDE):
     if peak > 0:
         clip = clip / peak * amplitude
 
-    print(f"Urban noise: {os.path.basename(path)} "
-          f"crop {duration:.0f}s at t={start / fs:.1f}s")
-    return clip
+    name = os.path.basename(path)
+    print(f"Urban noise: {name} crop {duration:.0f}s at t={start / fs:.1f}s")
+    return clip, name

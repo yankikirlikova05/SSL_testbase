@@ -1,5 +1,4 @@
 # Noiseless speech: wait 3s, then play 4 random 4s speech clips from random speakers
-
 import random
 import time
 
@@ -7,6 +6,7 @@ import numpy as np
 import sounddevice as sd
 
 from speech_selector import get_speech
+from csv_logger import log_event
 
 DEVICE_ID = 4
 N_CHANNELS_OUT = 16
@@ -40,12 +40,13 @@ def main():
     for i in range(N_REPEATS):
         spk = random.choice(SPEECH_SPEAKERS)
         ch = speaker_to_channel[spk]
-        clip = get_speech(duration=SPEECH_DURATION)
+        clip, sound = get_speech(duration=SPEECH_DURATION)
 
         out = np.zeros((len(clip), N_CHANNELS_OUT))
         out[:, ch] = clip
 
         print(f"Speech {i + 1}/{N_REPEATS} -> speaker {spk} (ch {ch})")
+        log_event(__file__, spk, sound, SPEECH_DURATION)
         sd.play(out, samplerate=fs, device=DEVICE_ID)
         sd.wait()
 
