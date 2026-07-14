@@ -1,5 +1,12 @@
 # Play urban noise from speakers 9,10,11,12 and speech1.wav from speaker 1
 
+#find speech recording , timit, libery speech 
+
+
+# label the recordings with timestapms and play sounds from random speakres when multiple sources. 
+# could do it randomly for single source as well . 
+
+# speech without noise 
 import glob
 import os
 from math import gcd

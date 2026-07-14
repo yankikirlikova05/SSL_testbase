@@ -1,5 +1,6 @@
 #Play a 1 kHz tone from speakers 7, 8, 1, 2, 3 in order.
 
+
 import time
 
 import numpy as np
