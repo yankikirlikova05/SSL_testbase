@@ -13,7 +13,6 @@ URBAN_DIR = "urban"
 CROP_DURATION = 10.0 # TODO: change as needed
 fs = 48000
 AMPLITUDE = 0.3
-OUTPUT_FILE = "urban_noise_crop.wav"
 
 
 def resample_to(x, sr):
@@ -49,13 +48,3 @@ def get_urban_noise(duration=CROP_DURATION, amplitude=AMPLITUDE):
     print(f"Urban noise: {os.path.basename(path)} "
           f"crop {duration:.0f}s at t={start / fs:.1f}s")
     return clip
-
-
-def main():
-    clip = get_urban_noise()
-    sf.write(OUTPUT_FILE, clip, fs)
-    print(f"Saved -> {OUTPUT_FILE}")
-
-
-if __name__ == "__main__":
-    main()
