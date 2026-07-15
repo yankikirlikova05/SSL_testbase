@@ -3,21 +3,23 @@
 import numpy as np
 import sounddevice as sd
 
-from urban_noise_selector import get_urban_noise
-from csv_logger import log_event
+from helpers.urban_noise_selector import get_urban_noise
+from data.csv_logger import log_event
 from session_config import (
     DEVICE_ID, N_CHANNELS_OUT, fs, speaker_to_channel,
     NOISE_SPEAKERS, NOISE_GAIN,
 )
+from helpers.utils import db_to_amp
 
 DURATION = 5.0
 
 
 def main():
+    noise_amplitude = db_to_amp(NOISE_GAIN)
     out = np.zeros((int(DURATION * fs), N_CHANNELS_OUT))
     noise_files = []
     for spk in NOISE_SPEAKERS:                     # independent random clip per speaker
-        clip, noise_file = get_urban_noise(duration=DURATION, amplitude=NOISE_GAIN)
+        clip, noise_file = get_urban_noise(duration=DURATION, amplitude=noise_amplitude)
         out[:, speaker_to_channel[spk]] = clip
         noise_files.append(noise_file)
 

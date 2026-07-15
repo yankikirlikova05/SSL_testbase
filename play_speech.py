@@ -5,8 +5,10 @@ import time
 import numpy as np
 import sounddevice as sd
 
-from speech_selector import get_speech
-from csv_logger import log_event
+from helpers.speech_selector import get_speech
+from data.csv_logger import log_event
+from session_config import SOURCE_GAIN
+from helpers.utils import db_to_amp
 
 DEVICE_ID = 4
 N_CHANNELS_OUT = 16
@@ -29,24 +31,24 @@ speaker_to_channel = {
 
 SPEECH_SPEAKERS = [1, 2, 3, 4, 5, 6, 7, 8]
 START_DELAY = 3.0
-SPEECH_DURATION = 4.0
 GAP = 1.0
 N_REPEATS = 4
 
 
 def main():
     time.sleep(START_DELAY)
+    source_amplitude = db_to_amp(SOURCE_GAIN)
 
     for i in range(N_REPEATS):
         spk = random.choice(SPEECH_SPEAKERS)
         ch = speaker_to_channel[spk]
-        clip, sound = get_speech(duration=SPEECH_DURATION)
+        clip, sound = get_speech(amplitude=source_amplitude)
 
         out = np.zeros((len(clip), N_CHANNELS_OUT))
         out[:, ch] = clip
 
         print(f"Speech {i + 1}/{N_REPEATS} -> speaker {spk} (ch {ch})")
-        log_event(__file__, spk, sound, SPEECH_DURATION)
+        log_event(__file__, spk, sound, round(len(clip) / fs, 1))
         sd.play(out, samplerate=fs, device=DEVICE_ID)
         sd.wait()
 

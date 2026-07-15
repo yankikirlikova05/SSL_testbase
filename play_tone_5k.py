@@ -5,6 +5,9 @@ import time
 import numpy as np
 import sounddevice as sd
 
+from session_config import SOURCE_GAIN
+from helpers.utils import db_to_amp
+
 DEVICE_ID = 4
 N_CHANNELS_OUT = 16
 fs = 48000
@@ -21,7 +24,7 @@ speaker_to_channel = {
 }
 
 FREQ = 5000  
-AMPLITUDE = 0.3 
+AMPLITUDE = db_to_amp(SOURCE_GAIN)
 TONE_DURATION = 3.0
 GAP = 3.0
 START_DELAY = 10.0
@@ -39,7 +42,7 @@ tone[-fade_len:] *= fade[::-1]
 def main():
     time.sleep(START_DELAY)
 
-    for spk in enumerate(PLAY_ORDER):
+    for spk in PLAY_ORDER:
         ch = speaker_to_channel[spk]
         output_signal = np.zeros((len(tone), N_CHANNELS_OUT))
         output_signal[:, ch] = tone

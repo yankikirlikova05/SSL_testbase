@@ -5,8 +5,10 @@ import time
 import numpy as np
 import sounddevice as sd
 
-from urban_noise_selector import get_urban_noise
-from csv_logger import log_event
+from helpers.urban_noise_selector import get_urban_noise
+from data.csv_logger import log_event
+from helpers.utils import db_to_amp
+from session_config import SOURCE_GAIN, NOISE_GAIN
 
 DEVICE_ID = 4
 N_CHANNELS_OUT = 16
@@ -28,11 +30,12 @@ speaker_to_channel = {
 }
 
 FREQ = 1000
-AMPLITUDE = 0.3
-NOISE_GAIN = 0.3
+AMPLITUDE = db_to_amp(SOURCE_GAIN)
+NOISE_GAIN = db_to_amp(NOISE_GAIN)
 TONE_DURATION = 3.0
 GAP = 3.0
 START_DELAY = 10.0
+NOISE_LEAD = 3.0   # noise starts, then wait this long before the tone sequence
 PLAY_ORDER = [7, 8, 1, 2, 3]
 NOISE_SPEAKERS = [9, 10, 11, 12]
 
@@ -52,19 +55,21 @@ def tile_to(x, n):
 
 
 def main():
-    step = len(tone) + int(GAP * fs) 
+    lead_n = int(NOISE_LEAD * fs)
+    step = len(tone) + int(GAP * fs)
     seq_len = len(PLAY_ORDER) * step
-    out = np.zeros((seq_len, N_CHANNELS_OUT))
+    total_n = lead_n + seq_len                     # noise runs the whole time; tones start after the lead
+    out = np.zeros((total_n, N_CHANNELS_OUT))
 
     noise_files = []
     for spk in NOISE_SPEAKERS:                     # independent random clip per speaker
         noise_clip, noise_file = get_urban_noise(amplitude=NOISE_GAIN)
-        out[:, speaker_to_channel[spk]] = tile_to(noise_clip, seq_len)
+        out[:, speaker_to_channel[spk]] = tile_to(noise_clip, total_n)
         noise_files.append(noise_file)
-    log_event(__file__, NOISE_SPEAKERS, noise_files, round(seq_len / fs, 1), notes="background noise")
+    log_event(__file__, NOISE_SPEAKERS, noise_files, round(total_n / fs, 1), notes="background noise")
 
     for i, spk in enumerate(PLAY_ORDER):
-        s = i * step
+        s = lead_n + i * step
         ch = speaker_to_channel[spk]
         out[s:s + len(tone), ch] = tone
         log_event(__file__, spk, f"{FREQ}Hz_tone", TONE_DURATION)
