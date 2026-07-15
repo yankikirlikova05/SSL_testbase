@@ -6,27 +6,11 @@ from speech_selector import get_speech
 from urban_noise_selector import get_urban_noise
 from csv_logger import log_event
 
-DEVICE_ID = 4
-N_CHANNELS_OUT = 16
-fs = 48000
+from session_config import (
+    DEVICE_ID, N_CHANNELS_OUT, fs, speaker_to_channel,
+    NOISE_SPEAKERS, NOISE_GAIN,
+)
 
-speaker_to_channel = {
-    1: 11,
-    2: 8,
-    3: 12,
-    4: 15,
-    5: 4,
-    6: 3,
-    7: 1,
-    8: 0,
-    9: 13,
-    10: 7,
-    11: 10,
-    12: 5,
-}
-
-NOISE_SPEAKERS = [9, 10, 11, 12]
-NOISE_GAIN = 0.3
 GROUPS = [(1, 2, 3), (1, 3, 5), (1, 2, 5), (1, 2, 6), (1, 3, 4), (1, 4, 7), (2, 3, 4)]
 START_DELAY = 3.0
 SPEECH_DURATION = 5.0

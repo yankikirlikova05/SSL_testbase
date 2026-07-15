@@ -8,24 +8,7 @@ import sounddevice as sd
 from speech_selector import get_speech
 from csv_logger import log_event
 
-DEVICE_ID = 4
-N_CHANNELS_OUT = 16
-fs = 48000
-
-speaker_to_channel = {
-    1: 11,
-    2: 8,
-    3: 12,
-    4: 15,
-    5: 4,
-    6: 3,
-    7: 1,
-    8: 0,
-    9: 13,
-    10: 7,
-    11: 10,
-    12: 5,
-}
+from session_config import DEVICE_ID, N_CHANNELS_OUT, fs, speaker_to_channel
 
 PAIRS = [(1, 2), (1, 3), (1, 4), (1, 5), (2, 3), (3, 4), (3, 5), (3, 6), (3, 7)]
 START_DELAY = 3.0
