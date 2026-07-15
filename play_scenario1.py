@@ -34,11 +34,12 @@ def main():
     total_n = int(total * fs)
     out = np.zeros((total_n, N_CHANNELS_OUT))
 
-    noise_clip, noise_file = get_urban_noise(amplitude=NOISE_GAIN)
-    noise = tile_to(noise_clip, total_n)
-    for spk in NOISE_SPEAKERS:
-        out[:, speaker_to_channel[spk]] = noise
-    log_event(__file__, NOISE_SPEAKERS, noise_file, round(total, 1), notes="background noise")
+    noise_files = []
+    for spk in NOISE_SPEAKERS:                     # independent random clip per speaker
+        noise_clip, noise_file = get_urban_noise(amplitude=NOISE_GAIN)
+        out[:, speaker_to_channel[spk]] = tile_to(noise_clip, total_n)
+        noise_files.append(noise_file)
+    log_event(__file__, NOISE_SPEAKERS, noise_files, round(total, 1), notes="background noise")
 
     for i, spk in enumerate(PLAY_ORDER):
         s = int((START_DELAY + i * (SPEECH_DURATION + GAP)) * fs)
