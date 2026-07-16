@@ -12,9 +12,9 @@ from session_config import DEVICE_ID, N_CHANNELS_OUT, fs, speaker_to_channel, SO
 from helpers.utils import db_to_amp
 
 GROUPS = [(1, 2, 3), (1, 3, 5), (1, 2, 5), (1, 2, 6), (1, 3, 4), (1, 4, 7), (2, 3, 4)]
-START_DELAY = 3.0
-GAP = 5.0
-END_WAIT = 3.0
+START_DELAY = 1.0
+GAP = 3.0
+END_WAIT = 1.0
 
 
 def main():

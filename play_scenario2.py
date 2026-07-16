@@ -14,9 +14,9 @@ from session_config import (
 from helpers.utils import db_to_amp
 
 PAIRS = [(1, 2), (1, 3), (1, 4), (1, 5), (2, 3), (3, 4), (3, 5), (3, 6), (3, 7)]
-START_DELAY = 3.0
-GAP = 5.0
-END_WAIT = 3.0
+START_DELAY = 1.0
+GAP = 3.0
+END_WAIT = 2.0
 
 
 def tile_to(x, n):

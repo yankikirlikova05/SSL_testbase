@@ -13,9 +13,9 @@ from session_config import (
 from helpers.utils import db_to_amp
 
 GROUPS = [(1, 2, 3), (1, 3, 5), (1, 2, 5), (1, 2, 6), (1, 3, 4), (1, 4, 7), (2, 3, 4)]
-START_DELAY = 3.0
-GAP = 5.0
-END_WAIT = 3.0
+START_DELAY = 1.0
+GAP = 3.0
+END_WAIT = 2.0
 
 
 def tile_to(x, n):
@@ -26,7 +26,7 @@ def tile_to(x, n):
 
 def main():
     source_amplitude = db_to_amp(SOURCE_GAIN)
-    speeches = get_speech(num=3, amplitude=source_amplitude)  # three distinct random files
+    speeches = get_speech(num=3, amplitude=source_amplitude) 
     clips = [clip for clip, _ in speeches]
     sounds = [name for _, name in speeches]
     slot_dur = max(len(c) for c in clips) / fs  # longest of the trio, no crop
