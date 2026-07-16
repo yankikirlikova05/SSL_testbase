@@ -2,7 +2,7 @@ DEVICE_ID = 4
 N_CHANNELS_OUT = 16 
 fs = 48000 
 
-SOURCE_GAIN = -14   # dB (converted to linear amplitude via utils.db_to_amp)
+SOURCE_GAIN = -32   # dB started; -14 , -20, -26, -32
 NOISE_GAIN = -10    # dB
 NOISE_SPEAKERS = [9, 10, 11, 12] 
 

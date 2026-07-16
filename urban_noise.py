@@ -11,7 +11,7 @@ from session_config import (
 )
 from helpers.utils import db_to_amp
 
-DURATION = 5.0
+DURATION = 10.0
 
 
 def main():
