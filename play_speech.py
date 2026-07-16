@@ -42,7 +42,7 @@ def main():
     for i in range(N_REPEATS):
         spk = random.choice(SPEECH_SPEAKERS)
         ch = speaker_to_channel[spk]
-        clip, sound = get_speech(amplitude=source_amplitude)
+        (clip, sound), = get_speech(amplitude=source_amplitude)
 
         out = np.zeros((len(clip), N_CHANNELS_OUT))
         out[:, ch] = clip

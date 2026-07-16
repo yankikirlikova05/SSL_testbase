@@ -26,12 +26,10 @@ def tile_to(x, n):
 
 def main():
     source_amplitude = db_to_amp(SOURCE_GAIN)
-    clip_a, sound_a = get_speech(amplitude=source_amplitude)  # three random chunks, reused
-    clip_b, sound_b = get_speech(amplitude=source_amplitude)
-    clip_c, sound_c = get_speech(amplitude=source_amplitude)
-    clips = [clip_a, clip_b, clip_c]
-    sounds = [sound_a, sound_b, sound_c]
-    slot_dur = max(len(clip_a), len(clip_b), len(clip_c)) / fs  # longest of the trio, no crop
+    speeches = get_speech(num=3, amplitude=source_amplitude)  # three distinct random files
+    clips = [clip for clip, _ in speeches]
+    sounds = [name for _, name in speeches]
+    slot_dur = max(len(c) for c in clips) / fs  # longest of the trio, no crop
 
     total = (START_DELAY + len(GROUPS) * slot_dur + (len(GROUPS) - 1) * GAP + END_WAIT)
     total_n = int(total * fs)

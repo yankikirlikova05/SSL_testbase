@@ -1,5 +1,5 @@
-# Pick a random file from speech/ and return it whole (no crop/loop).
-# Returns (clip, filename). Helper only — imported by the play scripts.
+# Pick `num` distinct random files from speech/, each returned whole (no crop/loop).
+# Returns a list of (clip, filename) tuples. Helper only — imported by the play scripts.
 
 import glob
 import os
@@ -22,23 +22,26 @@ def resample_to(x, sr):
     return resample_poly(x, fs // g, sr // g)
 
 
-def get_speech(amplitude=AMPLITUDE):
+def get_speech(num=1, amplitude=AMPLITUDE):
     files = sorted(glob.glob(os.path.join(SPEECH_DIR, "*.wav")) +
                    glob.glob(os.path.join(SPEECH_DIR, "*.mp3")))
-    if not files:
-        raise FileNotFoundError(f"No audio files in {SPEECH_DIR}/")
-    path = random.choice(files)
+    if len(files) < num:
+        raise ValueError(f"Requested {num} speech files but only {len(files)} in {SPEECH_DIR}/")
+    paths = random.sample(files, num)
 
-    data, sr = sf.read(path, always_2d=False)
-    if data.ndim > 1:                        # multi-channel -> mono
-        data = data.mean(axis=1)
-    data = data.astype(np.float64)
-    data = resample_to(data, sr)             # whole file, no crop / loop
+    speeches = []
+    for path in paths:
+        data, sr = sf.read(path, always_2d=False)
+        if data.ndim > 1: 
+            data = data.mean(axis=1)
+        data = data.astype(np.float64)
+        data = resample_to(data, sr) 
 
-    peak = np.max(np.abs(data))              # peak-normalize to target level
-    if peak > 0:
-        data = data / peak * amplitude
+        peak = np.max(np.abs(data))
+        if peak > 0:
+            data = data / peak * amplitude
 
-    name = os.path.basename(path)
-    print(f"Speech: {name} ({len(data) / fs:.1f}s)")
-    return data, name
+        name = os.path.basename(path)
+        print(f"Speech: {name} ({len(data) / fs:.1f}s)")
+        speeches.append((data, name))
+    return speeches

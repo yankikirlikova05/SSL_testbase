@@ -27,7 +27,7 @@ def tile_to(x, n):
 
 def main():
     source_amplitude = db_to_amp(SOURCE_GAIN)
-    clip, speech_file = get_speech(amplitude=source_amplitude)
+    (clip, speech_file), = get_speech(amplitude=source_amplitude)
     n_clip = len(clip)
     clip_dur = n_clip / fs                         # actual file length, no crop
 

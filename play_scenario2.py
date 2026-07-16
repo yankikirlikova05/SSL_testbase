@@ -27,8 +27,7 @@ def tile_to(x, n):
 
 def main():
     source_amplitude = db_to_amp(SOURCE_GAIN)
-    clip_a, sound_a = get_speech(amplitude=source_amplitude)
-    clip_b, sound_b = get_speech(amplitude=source_amplitude)
+    (clip_a, sound_a), (clip_b, sound_b) = get_speech(num=2, amplitude=source_amplitude)
     slot_dur = max(len(clip_a), len(clip_b)) / fs  # longest of the pair, no crop
 
     total = (START_DELAY + len(PAIRS) * slot_dur + (len(PAIRS) - 1) * GAP + END_WAIT)

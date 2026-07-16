@@ -20,7 +20,7 @@ def main():
     os.makedirs(OUT_DIR, exist_ok=True)
 
     for i in range(N_EACH):
-        clip, name = get_speech()
+        (clip, name), = get_speech()
         path = os.path.join(OUT_DIR, f"speech_{i + 1}.wav")
         sf.write(path, clip, fs)
         print(f"wrote {path}  (from {name})")

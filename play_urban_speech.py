@@ -73,7 +73,7 @@ def main():
     source_amplitude = db_to_amp(SOURCE_GAIN)
     noise_amplitude = db_to_amp(NOISE_GAIN)
 
-    speech, speech_file = get_speech(amplitude=source_amplitude)  # random whole file, no crop
+    (speech, speech_file), = get_speech(amplitude=source_amplitude)  # random whole file, no crop
     speech_dur = len(speech) / fs
     total = SPEECH_DELAY + speech_dur + NOISE_TAIL
     total_n = int(total * fs)
